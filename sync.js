@@ -1,5 +1,6 @@
 var axios = require('axios');
 const fs = require('fs');
+const availableTags = require("./tags.json")
 require('dotenv').config()
 const getData = (page) => {
     // get current date as yyyy-mm-dd
@@ -16,6 +17,12 @@ const getData = (page) => {
     return axios(config)
 }
 
+const addTags = (ledger) => {
+    let tags = availableTags[ledger.voucher_type];
+    ledger['tags'] = tags.tags;
+return ledger;
+}
+
 const sync = async () => {
     let totalPages = 1;
     let currentPage = 2;
@@ -27,8 +34,13 @@ const sync = async () => {
         response = await getData(currentPage);
         data = [...data, ...response.data.data.result.breakdown];
     }
-    return data;
+
+    return data.map(addTags);
 }
+
+
+
+
 
 sync().then(data => {
     fs.writeFileSync("./data/ledger.json", JSON.stringify(data, null, 4))
