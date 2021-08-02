@@ -35,6 +35,10 @@ Install dependencies
   npm install
 ```
 
+```bash
+  npm run login
+```
+
 Sync Data
 
 ```bash

@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "sync": "node sync.js",
+    "login": "node login.js",
     "build": "ejs ./template/index.ejs -f ./data/ledger.json -o index.html",
     "build:watch": "nodemon --exec 'npm run build' ./template/*"
   },
