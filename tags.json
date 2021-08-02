@@ -1,0 +1,14 @@
+{
+    "Bank Receipts":{
+        "tags": ["withdraw","bank"]
+    },
+    "Book Voucher":{
+        "tags": ["purchase"]
+    },
+    "Journal Entry":{
+        "tags":["charges"]
+    },
+    "Bank Payments":{
+        "tags":["payment","bank"]
+    }
+}
