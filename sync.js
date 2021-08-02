@@ -20,7 +20,7 @@ const getData = (page) => {
 const addTags = (ledger) => {
     let tags = availableTags[ledger.voucher_type];
     ledger['tags'] = tags.tags;
-return ledger;
+    return ledger;
 }
 
 const sync = async () => {
@@ -35,7 +35,7 @@ const sync = async () => {
         data = [...data, ...response.data.data.result.breakdown];
     }
 
-    return data.map(addTags);
+    return { "ledgers": data.map(addTags) };
 }
 
 
