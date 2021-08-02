@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer-extra');
+const fs = require('fs');
 const pluginStealth = require('puppeteer-extra-plugin-stealth'); // Use v2.4.5 instead of latest
 const readline = require("readline");
 
@@ -42,45 +43,39 @@ const prompt = (query, hidden = false) =>
         }
     });
 
-// Launch puppeteer browser.
 puppeteer.launch({ headless: headless }).then(async (browser) => {
     console.log('Opening chromium browser...');
     const page = await browser.newPage();
     const pages = await browser.pages();
-    // Close the new tab that chromium always opens first.
     pages[0].close();
-    await page.goto('https://accounts.google.com/signin/v2/identifier', { waitUntil: 'networkidle2' });
-    if (headless) {
-        // Only needed if sign in requires you to click 'sign in with google' button.
-        // await page.waitForSelector('button[data-test="google-button-login"]');
-        // await page.waitFor(1000);
-        // await page.click('button[data-test="google-button-login"]');
-
-        // Wait for email input.
-        await page.waitForSelector('#identifierId');
-        let badInput = true;
-
-        // Keep trying email until user inputs email correctly.
-        // This will error due to captcha if too many incorrect inputs.
-        while (badInput) {
-            const email = await prompt('Email or phone: ');
-            await page.type('#identifierId', email);
-            await page.waitFor(1000);
-            await page.keyboard.press('Enter');
-            await page.waitFor(1000);
-            badInput = await page.evaluate(() => document.querySelector('#identifierId[aria-invalid="true"]') !== null);
-            if (badInput) {
-                console.log('Incorrect email or phone. Please try again.');
-                await page.click('#identifierId', { clickCount: 3 });
-            }
-        }
-        const password = await prompt('Enter your password: ', true);
-        console.log('Finishing up...');
-        // Wait for password input
-        await page.type('input[type="password"]', password);
-        await page.waitFor(1000);
-        await page.keyboard.press('Enter');
-        // For headless mode, 2FA needs to be handled here.
-        // Login via gmail app works autmatically.
+    await page.goto('https://console.zerodha.com/', { waitUntil: 'networkidle2' });
+    await page.waitForTimeout(1000);
+    await page.click('button[class="btn-blue"]', { waitUntil: 'networkidle2' });
+    await page.waitForTimeout(2000);
+    const username = await prompt('Enter Username: ');
+    const password = await prompt('Enter Password: ', true);
+    await page.type('#userid', username);
+    await page.waitForTimeout(1000);
+    await page.type('#password', password);
+    await page.waitForTimeout(1000);
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(2000);
+    const pin = await prompt('Enter Pin/TOTP: ', true);
+    let isTOTP = await page.evaluate(() => document.querySelector('#totp') !== null);
+    if (isTOTP) {
+        await page.type('#totp', pin);
     }
+    else {
+        await page.type('#pin', pin);
+    }
+    await page.waitForTimeout(1000)
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(5000);
+    await page.goto('https://console.zerodha.com/funds/statement', { waitUntil: 'networkidle2' });
+    let cookies = await page.cookies()
+    console.log(cookies);
+    let session = cookies.find(c => c.name === 'session').value;
+    let public_token = cookies.find(c => c.name === 'public_token').value;
+    fs.writeFileSync('.env', `SESSION=${session}\nPUBLIC_TOKEN=${public_token}`);
+    await browser.close();
 });

@@ -9,8 +9,8 @@ const getData = (page) => {
         method: 'get',
         url: `https://console.zerodha.com/api/ledger?segment=EQ&from_date=2016-04-01&to_date=${date}&page=${page}`,
         headers: {
-            'x-csrftoken': process.env.CSRF,
-            'cookie': process.env.COOKIE
+            'x-csrftoken': process.env.PUBLIC_TOKEN,
+            'cookie': `session=${process.env.SESSION};public_token=${process.env.PUBLIC_TOKEN}`
         }
     };
 
@@ -27,10 +27,12 @@ const sync = async () => {
     let totalPages = 1;
     let currentPage = 2;
     let data = [];
+    console.log(`Grabbing Data,page 1`);
     let response = await getData(1);
     totalPages = response.data.data.pagination.total_pages;
     data = [...data, ...response.data.data.result.breakdown];
     for (; currentPage <= totalPages; currentPage++) {
+        console.log(`Grabbing Data,page ${currentPage}`);
         response = await getData(currentPage);
         data = [...data, ...response.data.data.result.breakdown];
     }
