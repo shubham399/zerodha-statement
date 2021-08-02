@@ -35,10 +35,16 @@ Install dependencies
   npm install
 ```
 
-Start the server
+Sync Data
 
 ```bash
   npm run sync
+```
+
+Generate the Page
+
+```bash
+  npm run build
 ```
 
   
