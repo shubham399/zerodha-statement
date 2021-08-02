@@ -53,4 +53,4 @@ Generate the Page
 
 Things to do
 
-Use [puppeteer](https://github.com/puppeteer/puppeteer/) to ask user to login and auto grab CSRF and cookie
+~~Use [puppeteer](https://github.com/puppeteer/puppeteer/) to ask user to login and auto grab CSRF and cookie~~
