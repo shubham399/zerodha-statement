@@ -8,12 +8,12 @@ An Application to process Zerodha Statement and add tags to the statements
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`CSRF`
+`SESSION`
 
-`COOKIE`
+`PUBLIC_TOKEN`
 
 
-Please grab the CSRF token and All the Cookies from [https://console.zerodha.com](https://console.zerodha.com)
+Please grab the cookies from [https://console.zerodha.com](https://console.zerodha.com)
   
 ## Run Locally
 
@@ -35,6 +35,10 @@ Install dependencies
   npm install
 ```
 
+```bash
+  npm run login
+```
+
 Sync Data
 
 ```bash
@@ -53,4 +57,4 @@ Generate the Page
 
 Things to do
 
-Use [puppeteer](https://github.com/puppeteer/puppeteer/) to ask user to login and auto grab CSRF and cookie
+~~Use [puppeteer](https://github.com/puppeteer/puppeteer/) to ask user to login and auto grab CSRF and cookie~~
