@@ -12,9 +12,7 @@ To run this project, you will need to add the following environment variables to
 
 `PUBLIC_TOKEN`
 
-
-Please grab the cookies from [https://console.zerodha.com](https://console.zerodha.com)
-  
+This will be automaticaly grabbed with `puppeteer` and stored in `.env` file.
 ## Run Locally
 
 Clone the project
@@ -35,6 +33,7 @@ Install dependencies
   npm install
 ```
 
+Login to zerodha to grab the data.
 ```bash
   npm run login
 ```
